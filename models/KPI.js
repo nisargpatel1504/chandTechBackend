@@ -47,7 +47,17 @@ const monthSchema = new Schema(
   },
   { toJSON: { getters: true } }
 );
-
+const expenseSchema = new mongoose.Schema({
+  type: mongoose.Types.Currency,
+  currency: {
+    type: String,
+    default: 'USD',
+  },
+  amount: {
+    type: Number,
+    get: (v) => v / 100,
+  },
+});
 const KPISchema = new Schema(
   {
     totalProfit: {
@@ -66,12 +76,8 @@ const KPISchema = new Schema(
       get: (v) => v / 100,
     },
     expensesByCategory: {
-      type: Map,
-      of: {
-        type: mongoose.Types.Currency,
-        currency: "USD",
-        get: (v) => v / 100,
-      },
+      type: Object,
+      of: expenseSchema,
     },
     monthlyData: [monthSchema],
     dailyData: [daySchema],
